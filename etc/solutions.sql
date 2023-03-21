@@ -1,4 +1,4 @@
-call init_db();
+# call init_db();
 
 # Ex 1
 
@@ -66,31 +66,19 @@ drop procedure if exists person_grands;
 delimiter |
 create procedure person_grands(person_id bigint unsigned)
 begin
-    declare LOCAL TEMPORARY TABLE parentsIds (id int);
-    insert into parentsIds (select mother_id as id
-                           from persons
-                           where id = 11
-                           union
-                           select father_id as id
-                           from persons
-                           where id = 11);
-
-    select * from parentsIds;
-
-#     select name, surname
-#     from persons
-#     where id in (select id from parentsIds)
-#       and id;
-
-#     drop view if exists parentsIds;
-
+    select grands.id, grands.name, grands.surname
+    from (
+         select *
+         from persons
+         where id = person_id
+         ) as person
+        join persons as parent on parent.id = person.mother_id or parent.id = person.father_id
+        join persons as grands on grands.id = parent.mother_id or grands.id = parent.father_id;
 end |
 delimiter ;
 
-call person_grands(9);
+# call person_grands(12);
 
 
 #                               Testing ground
 # ----------------------------------------------------------------------
-
-
