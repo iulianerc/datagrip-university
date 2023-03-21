@@ -10,7 +10,7 @@ FROM cercetatori;
 # ex1
 
 delimiter $$
-drop procedure if exists p_c;
+drop procedure if exists p_cursor1;
 CREATE PROCEDURE p_cursor1(p_iduniv INT)
 BEGIN
     DECLARE finisare INT DEFAULT 0;
@@ -44,10 +44,13 @@ END;
 $$
 delimiter ;
 
-#  crearea cursor_2
+# call p_cursor1(1);
 
 # ------------------------------------------------------------------------------------
 
+#  crearea cursor_2
+
+drop table if exists tab_temp;
 CREATE TABLE tab_temp
 (
     nume    VARCHAR(50),
@@ -84,6 +87,7 @@ BEGIN
 
     DECLARE CONTINUE handler
         FOR NOT FOUND SET done = 1;
+
     # Afisam antetul pentru primul cursor
     INSERT INTO tab_temp SELECT 'cercetatori ', 'cu cel putin doua articole:';
 
@@ -122,26 +126,15 @@ BEGIN
     CLOSE cursor_un_articol;
 END;
 $$
-
 DELIMITER ;
 
-# Apelam procedura
-CALL curs_2;
+# CALL curs_2;
+# truncate tab_temp;
 
-# afisam datele din tabel temporar
-SELECT *
-FROM tab_temp
-
-# stergem datele din tabel
-DELETE
-FROM tab_temp
-
-
-
-/*
-DROP PROCEDURE IF EXISTS curs_3;
+# ------------------------------------------------------------------------------------
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS curs_3;
 CREATE PROCEDURE curs_3()
 BEGIN
     DECLARE nume1 VARCHAR(255) DEFAULT '';
@@ -151,17 +144,18 @@ BEGIN
 
     # Definim cursorul pentru primele nume a cercetatorilor ordonati crescator
     DECLARE curs_cercetatori CURSOR FOR
-    SELECT `numecercetător`
-    FROM cercetatori
-    ORDER BY `numecercetător` ASC
-    LIMIT 3;
+        SELECT `numecercetător`
+        FROM cercetatori
+        ORDER BY `numecercetător` ASC
+        LIMIT 3;
 
     DECLARE CONTINUE HANDLER
-	 FOR NOT FOUND SET done = 1;
+        FOR NOT FOUND SET done = 1;
 
     # Deschidem cursorul și afișăm numele cercetătorilor
     OPEN curs_cercetatori;
-    read_loop: LOOP
+    read_loop:
+    LOOP
         FETCH curs_cercetatori INTO nume1;
         IF done THEN
             LEAVE read_loop;
@@ -176,8 +170,10 @@ BEGIN
         END IF;
 
         # Afisam mesajele insoțite de numele cercetatorilor
-        SELECT CONCAT('primul nume = ', nume1) union
-        SELECT CONCAT('al doilea nume = ', nume2) union
+        SELECT CONCAT('primul nume = ', nume1)
+        union
+        SELECT CONCAT('al doilea nume = ', nume2)
+        union
         SELECT CONCAT('al treilea nume = ', nume3);
     END LOOP;
     CLOSE curs_cercetatori;
@@ -185,24 +181,20 @@ BEGIN
 END$$
 DELIMITER ;
 
-CALL curs_3;
+# CALL curs_3;
 
-*/
+# ------------------------------------------------------------------------------------
 
+#  cursor_4
 
-/* cursor_4
-creem tabel temporar pentru datele temp
-
-CREATE TABLE tab_temp4(
-nume VARCHAR(250)
-)
-
-
-
-DROP PROCEDURE IF EXISTS curs_4;
+drop table if exists tab_temp4;
+CREATE TABLE tab_temp4
+(
+    nume VARCHAR(250)
+);
 
 DELIMITER $$
-
+DROP PROCEDURE IF EXISTS curs_4;
 CREATE PROCEDURE curs_4()
 BEGIN
     DECLARE done BOOL DEFAULT false;
@@ -213,55 +205,47 @@ BEGIN
 
     # Definim cursorul pentru fiecare cercetător
     DECLARE curs_cercetator CURSOR FOR
-    SELECT SUBSTRING_INDEX(`numecercetător`, ' ', 1),
-       SUBSTRING_INDEX(`numecercetător`, ' ', -1),
-       COUNT(autori.idarticol)
-		FROM cercetatori
-	 RIGHT JOIN autori ON autori.IdCercetator = cercetatori.idcercetator
-	 GROUP BY numecercetător;
+        SELECT SUBSTRING_INDEX(`numecercetător`, ' ', 1),
+               SUBSTRING_INDEX(`numecercetător`, ' ', -1),
+               COUNT(autori.idarticol)
+        FROM cercetatori
+                 RIGHT JOIN autori ON autori.IdCercetator = cercetatori.idcercetator
+        GROUP BY numecercetător;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
     # Deschidem cursorul și afișăm numărul de articole pentru fiecare cercetător
     OPEN curs_cercetator;
-    read_loop: LOOP
+    read_loop:
+    LOOP
         FETCH curs_cercetator INTO nume_cercetator, prenume_cercetator, numar_articole;
         IF done THEN
             LEAVE read_loop;
         END IF;
         # Afisam informatiile despre cercetator si numarul de articole
-        INSERT INTO tab_temp4 SELECT CONCAT('Nume - ', nume_cercetator, ', prenume - ', prenume_cercetator, ', articole - ', numar_articole);
+        INSERT INTO tab_temp4
+        SELECT CONCAT('Nume - ', nume_cercetator, ', prenume - ', prenume_cercetator, ', articole - ', numar_articole);
 
     END LOOP;
     CLOSE curs_cercetator;
-
 END$$
-
 DELIMITER ;
 
-# Apelam cursor
-CALL curs_4;
+# CALL curs_4;
+# truncate tab_temp4;
 
-# afisam datele din tabel temporar
-SELECT * FROM tab_temp4
-
-# stergem datele din tabel
-DELETE FROM tab_temp4
-
-*/
-
+# ------------------------------------------------------------------------------------
 
 # cursor_5
-# creem tabel temporar pentru datele temp
 
+drop table if exists tab_temp5;
 CREATE TABLE tab_temp5
 (
     nume VARCHAR(250)
 );
 
-DROP PROCEDURE IF EXISTS curs_5;
 DELIMITER $$
-
+DROP PROCEDURE IF EXISTS curs_5;
 CREATE PROCEDURE curs_5()
 BEGIN
     DECLARE done BOOL DEFAULT false;
@@ -292,23 +276,7 @@ BEGIN
     CLOSE curs_articole;
 
 END$$
-
 DELIMITER ;
 
-
-# Apelam cursor
-
-CALL curs_5;
-
-# afisam datele din tabel temporar
-
-SELECT *
-FROM tab_temp5;
-
-# stergem datele din tabel
-
-DELETE
-FROM tab_temp5;
-
-
-
+# CALL curs_5;
+# truncate tab_temp5;
