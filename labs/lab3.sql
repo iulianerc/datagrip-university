@@ -64,8 +64,7 @@ delimiter $$
 drop procedure if exists proc_raiting;
 CREATE PROCEDURE proc_raiting()
 BEGIN
-    DECLARE num_articole INT DEFAULT 0;
-    DECLARE num_articole_univ INT DEFAULT 0;
+    DECLARE num_articole INT DEFAULT (select count(*) from articole);
 
     select cercetatori.numecercetător,
            count(autori.IdArticol) / num_articole * 100 as 'reitingul general',
@@ -82,7 +81,7 @@ END;
 $$
 DELIMITER ;
 
-# CALL proc_raiting()
+# CALL proc_raiting();
 
 # __________________________________________________________________________________________________
 
