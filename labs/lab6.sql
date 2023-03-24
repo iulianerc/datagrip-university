@@ -70,8 +70,8 @@ BEGIN
     DECLARE cursor_articole CURSOR FOR
         SELECT c.`numecercetător`, u.denuniversitate
         FROM cercetatori C
-                 left JOIN autori A ON C.idcercetator = A.idcercetator
-                 LEFT JOIN universitate U ON C.iduniversitate = U.iduniversitate
+            left JOIN autori A ON C.idcercetator = A.idcercetator
+            LEFT JOIN universitate U ON C.iduniversitate = U.iduniversitate
         GROUP BY C.`numecercetător`, U.denuniversitate
         HAVING COUNT(A.idarticol) >= 2;
 
@@ -80,8 +80,8 @@ BEGIN
     DECLARE cursor_un_articol CURSOR FOR
         SELECT c.`numecercetător`, u.denuniversitate
         FROM cercetatori C
-                 left JOIN autori A ON C.idcercetator = A.idcercetator
-                 LEFT JOIN universitate U ON C.iduniversitate = U.iduniversitate
+            left JOIN autori A ON C.idcercetator = A.idcercetator
+            LEFT JOIN universitate U ON C.iduniversitate = U.iduniversitate
         GROUP BY C.`numecercetător`, U.denuniversitate
         HAVING COUNT(A.idarticol) = 1;
 
@@ -187,8 +187,8 @@ DELIMITER ;
 
 #  cursor_4
 
-drop table if exists tab_temp4;
-CREATE TABLE tab_temp4
+drop temporary table if exists tab_temp4;
+CREATE temporary TABLE tab_temp4
 (
     nume VARCHAR(250)
 );
@@ -209,7 +209,7 @@ BEGIN
                SUBSTRING_INDEX(`numecercetător`, ' ', -1),
                COUNT(autori.idarticol)
         FROM cercetatori
-                 RIGHT JOIN autori ON autori.IdCercetator = cercetatori.idcercetator
+            RIGHT JOIN autori ON autori.IdCercetator = cercetatori.idcercetator
         GROUP BY numecercetător;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
@@ -227,12 +227,16 @@ BEGIN
         SELECT CONCAT('Nume - ', nume_cercetator, ', prenume - ', prenume_cercetator, ', articole - ', numar_articole);
 
     END LOOP;
+
     CLOSE curs_cercetator;
+
+    select * from tab_temp4;
+    truncate tab_temp4;
+
 END$$
 DELIMITER ;
 
-# CALL curs_4;
-# truncate tab_temp4;
+CALL curs_4;
 
 # ------------------------------------------------------------------------------------
 
@@ -256,8 +260,8 @@ BEGIN
     DECLARE curs_articole CURSOR FOR
         SELECT denarticol, `numecercetător`
         FROM autori
-                 INNER JOIN articole ON articole.idarticol = autori.IdArticol
-                 INNER JOIN cercetatori ON cercetatori.idcercetator = autori.IdCercetator;
+            INNER JOIN articole ON articole.idarticol = autori.IdArticol
+            INNER JOIN cercetatori ON cercetatori.idcercetator = autori.IdCercetator;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 

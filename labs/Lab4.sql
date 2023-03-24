@@ -1,6 +1,6 @@
 call init_db();
 
-# Ex 1 --------
+# Ex 1 ---------------------------------------------------------------------------------------------
 
 delimiter $$
 drop trigger if exists trig1;
@@ -10,9 +10,11 @@ CREATE TRIGGER trig1
     FOR EACH row
 BEGIN
     INSERT INTO amici(idpersoana1, idpersoana2)
-    VALUES (NEW.idPersoana, (SELECT persoane.idPersoana
-                             FROM persoane
-                             WHERE persoane.Nume = 'Elvi'));
+    VALUES (NEW.idPersoana, (
+                            SELECT persoane.idPersoana
+                            FROM persoane
+                            WHERE persoane.Nume = 'Elvi'
+                            ));
 END $$
 delimiter ;
 
@@ -20,7 +22,7 @@ delimiter ;
 VALUES (17, 'Dan', 21);*/
 
 
-#Ex 2 ----------
+# Ex 2 ---------------------------------------------------------------------------------------------
 
 DELIMITER $$
 drop trigger if exists trig2;
@@ -41,7 +43,7 @@ DELIMITER ;
 VALUES (19, 'Dan', 21);*/
 
 
-# Ex 3 -------------------
+# Ex 3 ---------------------------------------------------------------------------------------------
 
 DELIMITER $$
 drop trigger if exists trig3;
@@ -53,8 +55,8 @@ BEGIN
     IF EXISTS(
             SELECT *
             FROM rude r
-                     LEFT JOIN amici a ON (r.idPersoana1 = a.idPersoana1 AND r.idPersoana2 = a.idPersoana2) OR
-                                          (r.idpersoana1 = a.idPersoana2 AND r.idpersoana2 = a.idPersoana1)
+                LEFT JOIN amici a ON (r.idPersoana1 = a.idPersoana1 AND r.idPersoana2 = a.idPersoana2) OR
+                                     (r.idpersoana1 = a.idPersoana2 AND r.idpersoana2 = a.idPersoana1)
             WHERE (r.idPersoana1 = NEW.idPersoana1 AND r.idPersoana2 = NEW.idPersoana2)
                OR (r.idPersoana1 = NEW.idPersoana2 AND r.idPersoana2 = NEW.idPersoana1)
                OR (a.idPersoana1 = NEW.idPersoana1 AND a.idPersoana2 = NEW.idPersoana2)
@@ -70,7 +72,7 @@ DELIMITER ;
 /*INSERT INTO rude
 VALUES (9, 9);*/
 
-#Ex 4 ----------------------
+# Ex 4 ------------------------------------------------------------------------------------
 
 delimiter $$
 drop trigger if exists trig4;
@@ -92,7 +94,7 @@ WHERE idpersoana1 = 9
   AND idpersoana2 = 9*/;
 
 
-# ex 5-------------------------
+# Ex 5 ---------------------------------------------------------------------------------------
 
 
 delimiter $$
@@ -117,7 +119,7 @@ DELETE
 FROM persoane
 WHERE idPersoana = 10;
 
-# 6 ----------------------------
+# Ex 6 ------------------------------------------------------------------------------------------
 
 delimiter $$
 drop trigger if exists trig6;
@@ -128,7 +130,7 @@ CREATE TRIGGER trig6
 BEGIN
     if NOT EXISTS(SELECT *
                   FROM persoane
-                           INNER JOIN persoane p
+                      INNER JOIN persoane p
                   WHERE p.idPersoana = NEW.Idpersoana1
                     AND p.idPersoana = NEW.Idpersoana2)
     Then
@@ -140,7 +142,7 @@ delimiter ;
 /*INSERT INTO amici (idPersoana1, idPersoana2)
 VALUES (50, 90);*/
 
-#Ex 7 ----------------------------
+# Ex 7 ------------------------------------------------------------------------------------------
 
 delimiter $$
 drop trigger if exists trig7;
@@ -149,12 +151,15 @@ CREATE TRIGGER trig7
     ON persoane
     FOR EACH ROW
 BEGIN
+
     UPDATE amici
     SET amici.idpersoana1 = NEW.idPersoana
     WHERE amici.idpersoana1 = OLD.idPersoana;
+
     UPDATE amici
     SET amici.idpersoana2 = NEW.idPersoana
     WHERE amici.idpersoana2 = OLD.idPersoana;
+
 END $$
 delimiter ;
 
@@ -162,7 +167,7 @@ delimiter ;
 SET persoane.idPersoana = 201
 WHERE persoane.idPersoana = 1;*/
 
-#Ex 8 -------------------------------
+# Ex 8 ---------------------------------------------------------------------------------------------
 
 delimiter $$
 drop trigger if exists trig8;
@@ -178,6 +183,6 @@ BEGIN
 END $$
 delimiter ;
 
-/*DELETE
+DELETE
 FROM persoane
-WHERE persoane.idPersoana = 16;*/
+WHERE persoane.idPersoana = 15;
