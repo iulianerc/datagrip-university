@@ -79,18 +79,18 @@ begin
            ('gg001', 'gg004', DATE_ADD(now(), interval 99 day), DATE_ADD(now(), interval 3 hour), 'zbor005');
 
     insert into Zboruri_disponibile(zbor, date, nr_locuri_libere, price)
-    values ('zbor001', DATE_ADD(now(), interval 4 day), 563, 1),
-           ('zbor002', DATE_ADD(now(), interval 6 day), 423, 2),
-           ('zbor003', DATE_ADD(now(), interval 6 day), 887, 3),
-           ('zbor004', DATE_ADD(now(), interval 11 day), 999, 8),
-           ('zbor005', DATE_ADD(now(), interval 99 day), 1213, 5);
+    values ('zbor001', DATE_ADD(now(), interval 4 day), 5, 1111),
+           ('zbor002', DATE_ADD(now(), interval 6 day), 423, 2222),
+           ('zbor003', DATE_ADD(now(), interval 6 day), 887, 3333),
+           ('zbor004', DATE_ADD(now(), interval 11 day), 999, 8888),
+           ('zbor005', DATE_ADD(now(), interval 99 day), 1213, 525);
 
     insert into Rezervari(zbor, date, nume_pasager, price)
-    values ('zbor001', DATE_ADD(now(), interval 4 day), 'pas001', 1 + 10),
-           ('zbor002', DATE_ADD(now(), interval 6 day), 'pas002', 2 + 10),
-           ('zbor003', DATE_ADD(now(), interval 6 day), 'pas003', 3 + 10),
-           ('zbor004', DATE_ADD(now(), interval 11 day), 'pas004', 8 + 10),
-           ('zbor005', DATE_ADD(now(), interval 99 day), 'pas005', 5 + 10);
+    values ('zbor001', DATE_ADD(now(), interval 4 day), 'pas001', 1111),
+           ('zbor002', DATE_ADD(now(), interval 6 day), 'pas002', 2222),
+           ('zbor003', DATE_ADD(now(), interval 6 day), 'pas003', 3333),
+           ('zbor004', DATE_ADD(now(), interval 11 day), 'pas004', 8888),
+           ('zbor005', DATE_ADD(now(), interval 99 day), 'pas005', 525);
 end
 $$
 delimiter ;
