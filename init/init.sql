@@ -39,7 +39,8 @@ begin
         zbor             varchar(32) references Zboruri (cod) on DELETE RESTRICT,
         date             date,
         nr_locuri_libere smallint unsigned,
-        price            int unsigned
+        price            int unsigned,
+        primary key (zbor, date)
     );
 
     drop table if exists Rezervari;
@@ -49,12 +50,12 @@ begin
         date         date,
         nume_pasager varchar(255),
         price        int unsigned,
-        foreign key (zbor, date) REFERENCES Zboruri_disponibile (zbor, date) ON DELETE RESTRICT
+        foreign key (zbor, date) references Zboruri_disponibile (zbor, date)
     );
 
     SET foreign_key_checks = 1;
 
-#  Insert
+    #  Insert
 
     insert into Aeroporturi(cod, oras)
     values ('gg001', 'Chisinau'),
@@ -78,18 +79,18 @@ begin
            ('gg001', 'gg004', DATE_ADD(now(), interval 99 day), DATE_ADD(now(), interval 3 hour), 'zbor005');
 
     insert into Zboruri_disponibile(zbor, date, nr_locuri_libere, price)
-    values ('gg001', DATE_ADD(now(), interval 4 day), 563, 1),
-           ('gg002', DATE_ADD(now(), interval 6 day), 563, 2),
-           ('gg003', DATE_ADD(now(), interval 6 day), 563, 3),
-           ('gg004', DATE_ADD(now(), interval 11 day), 563, 8),
-           ('gg005', DATE_ADD(now(), interval 99 day), 563, 5);
+    values ('zbor001', DATE_ADD(now(), interval 4 day), 563, 1),
+           ('zbor002', DATE_ADD(now(), interval 6 day), 423, 2),
+           ('zbor003', DATE_ADD(now(), interval 6 day), 887, 3),
+           ('zbor004', DATE_ADD(now(), interval 11 day), 999, 8),
+           ('zbor005', DATE_ADD(now(), interval 99 day), 1213, 5);
 
     insert into Rezervari(zbor, date, nume_pasager, price)
-    values ('gg001', DATE_ADD(now(), interval 4 day), 'pas001', 1 + 10),
-           ('gg002', DATE_ADD(now(), interval 6 day), 'pas002', 2 + 10),
-           ('gg003', DATE_ADD(now(), interval 6 day), 'pas003', 3 + 10),
-           ('gg004', DATE_ADD(now(), interval 11 day), 'pas004', 8 + 10),
-           ('gg005', DATE_ADD(now(), interval 99 day), 'pas005', 5 + 10);
+    values ('zbor001', DATE_ADD(now(), interval 4 day), 'pas001', 1 + 10),
+           ('zbor002', DATE_ADD(now(), interval 6 day), 'pas002', 2 + 10),
+           ('zbor003', DATE_ADD(now(), interval 6 day), 'pas003', 3 + 10),
+           ('zbor004', DATE_ADD(now(), interval 11 day), 'pas004', 8 + 10),
+           ('zbor005', DATE_ADD(now(), interval 99 day), 'pas005', 5 + 10);
 end
 $$
 delimiter ;
